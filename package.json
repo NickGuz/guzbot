@@ -1,0 +1,14 @@
+{
+  "name": "Guzbot",
+  "version": "1.0.0",
+  "description": "A Discord bot",
+  "main": "bot.js",
+  "author": "Guzza",
+  "dependencies": {
+    "dependencies": "0.0.1",
+    "discord.js": "^11.2.1",
+    "get-json": "^1.0.0",
+    "request": "^2.83.0",
+    "winston": "^2.4.0"
+  }
+}
