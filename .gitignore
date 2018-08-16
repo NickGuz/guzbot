@@ -2,4 +2,3 @@ auth.json
 node_modules/
 package-lock.json
 .git/
-.editorconfig
