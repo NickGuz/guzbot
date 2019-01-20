@@ -152,6 +152,11 @@ bot.on('message', message => {
 			// !sr grabs random image from a subreddit
 			//
 			case 'sr':
+				// ignore sunjay
+				if (message.author.id == 155380567846813697) {
+					break;
+				}
+
 				var url = 'https://www.reddit.com/r/' + cmd2 + '.json?limit=100';
 				var titles = [];
 				var images = [];
@@ -168,13 +173,50 @@ bot.on('message', message => {
 						}
 						var randint = getRandInt(0, titles.length);
 						if (titles.length == 0) {
-							message.channel.send("Could not find anything");
-						} else if (response.data.whitelist_status == "promo_adult_nsfw") {
-							if (message.channel.nsfw == true) {
-								message.channel.send(titles[randint] + '\n\n' + images[randint]);
-							}	
+							message.channel.send("Could not find anything");	
+
+						// don't allow nsfw content in non nsfw channel
+						} else if (response.data.children[randint].data.over_18 && !message.channel.nsfw) {
+							return;
 						} else {
 							message.channel.send(titles[randint] + '\n\n' + images[randint]);
+						}
+					}
+				});
+				break;
+				
+			//
+			// gets the top time for a kz map
+			//
+			case 'maptop':
+				if (cmd2 == null) {
+					message.channel.send("Usage: !maptop <mapname>");
+					break;
+				} 
+
+				var map = cmd2;
+				var player = null;
+				var runtime = null;
+				getJSON("http://www.kzstats.com/api/map/", function(error, response) {
+					if (!error) {
+						for (i = 0, k = response.length; i < k; i++) {
+							if (map == response[i].mapname) {
+								runtime = response[i].runtime;
+								player = response[i].player;
+
+								// https://stackoverflow.com/a/25279340
+								// a very simple solution that seems to work well so far
+								var milliseconds = runtime * 1000.0
+								var date = new Date(null);
+								date.setSeconds(0, milliseconds);
+								var result = date.toISOString().substr(11, 11);
+
+								message.channel.send(result + " by " + player);
+								break;
+							}
+						}
+						if (player == null || runtime == null) {
+							message.channel.send("Could not find map");
 						}
 					}
 				});
@@ -267,3 +309,6 @@ bot.on('message', message => {
 		return Math.round(Math.random() * (max - min)) + min;
 	}
 });
+
+// error handler
+bot.on("error", console.error);
