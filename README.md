@@ -14,3 +14,4 @@ Commands | Description
 !sr [subreddit] | Grabs random image from a subreddit
 !wiki [search] | Searches Wikipedia
 !convert [temp] [unit to convert from] | Converts a temperature from C to F or vice versa
+!blacklist [add/remove] [command] [@user] | Blacklists a user from specified command
